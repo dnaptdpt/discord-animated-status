@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Animated Status Controller</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-palette"></i> Discord Animated Status</h1>
+            <div class="status-bar">
+                <div class="status-info">
+                    <span id="userInfo"><i class="fas fa-circle-notch fa-spin"></i> Connecting...</span>
+                    <span id="emojiCount"><i class="fas fa-icons"></i> 0 emojis</span>
+                </div>
+                <div class="animation-status">
+                    <span id="animationStatus"><i class="fas fa-pause"></i> Stopped</span>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <section class="control-panel">
+                <h2><i class="fas fa-sliders-h"></i> Control Panel</h2>
+                <div class="controls">
+                    <button id="stopBtn" class="btn btn-danger"><i class="fas fa-stop"></i> Stop</button>
+                    <button id="refreshBtn" class="btn btn-secondary"><i class="fas fa-sync-alt"></i> Refresh</button>
+                </div>
+            </section>
+
+            <section class="animations-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-film"></i> Animations</h2>
+                    <button id="newAnimationBtn" class="btn btn-primary"><i class="fas fa-plus"></i> New Animation</button>
+                </div>
+                <div id="animationsList" class="animations-list"></div>
+            </section>
+
+            <section id="editorSection" class="editor-section" style="display: none;">
+                <div class="section-header">
+                    <h2 id="editorTitle"><i class="fas fa-edit"></i> Create Animation</h2>
+                    <button id="closeEditorBtn" class="btn btn-secondary"><i class="fas fa-times"></i> Close</button>
+                </div>
+
+                <div class="editor-form">
+                    <input type="hidden" id="animationId">
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-tag"></i> Animation Name</label>
+                        <input type="text" id="animationName" placeholder="My Awesome Animation">
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-clock"></i> Interval (milliseconds) - Min: 2900ms</label>
+                        <input type="number" id="animationInterval" value="10000" min="2900">
+                    </div>
+
+                    <div class="frames-container">
+                        <div class="frames-header">
+                            <h3><i class="fas fa-layer-group"></i> Frames</h3>
+                            <button id="addFrameBtn" class="btn btn-success"><i class="fas fa-plus"></i> Add Frame</button>
+                        </div>
+                        <div id="framesList" class="frames-list"></div>
+                    </div>
+
+                    <div class="editor-actions">
+                        <button id="saveAnimationBtn" class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
+                        <button id="testAnimationBtn" class="btn btn-secondary"><i class="fas fa-play"></i> Test</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="export-import-section">
+                <h2><i class="fas fa-box-open"></i> Export / Import</h2>
+                <div class="export-import-controls">
+                    <div class="export-box" data-glow>
+                        <h3><i class="fas fa-file-export"></i> Export Animation</h3>
+                        <p>Download animation to share with other accounts</p>
+                        <select id="exportAnimationSelect" class="form-control">
+                            <option value="">-- Select Animation --</option>
+                        </select>
+                        <button id="exportBtn" class="btn btn-primary"><i class="fas fa-download"></i> Download JSON</button>
+                    </div>
+                    
+                    <div class="import-box" data-glow>
+                        <h3><i class="fas fa-file-import"></i> Import Animation</h3>
+                        <p>Upload animation JSON file from another account</p>
+                        <input type="file" id="importFile" accept=".json" style="display: none;">
+                        <button id="importBtn" class="btn btn-success"><i class="fas fa-upload"></i> Upload JSON</button>
+                        <div id="importStatus"></div>
+                    </div>
+                    
+                    <div class="bulk-box" data-glow>
+                        <h3><i class="fas fa-boxes"></i> Bulk Operations</h3>
+                        <p>Export/Import all animations at once</p>
+                        <button id="exportAllBtn" class="btn btn-primary"><i class="fas fa-file-archive"></i> Export All</button>
+                        <button id="importAllBtn" class="btn btn-success"><i class="fas fa-folder-open"></i> Import All</button>
+                        <input type="file" id="importAllFile" accept=".json" style="display: none;">
+                    </div>
+
+                    <div class="share-box" data-glow>
+                        <h3><i class="fas fa-share-alt"></i> Quick Share</h3>
+                        <p>Copy animation data to clipboard</p>
+                        <select id="shareAnimationSelect" class="form-control">
+                            <option value="">-- Select Animation --</option>
+                        </select>
+                        <button id="copyBtn" class="btn btn-secondary"><i class="fas fa-copy"></i> Copy</button>
+                        <button id="pasteBtn" class="btn btn-secondary"><i class="fas fa-paste"></i> Paste</button>
+                    </div>
+                </div>
+            </section>
+
+            <div id="emojiPicker" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3><i class="fas fa-icons"></i> Select Emoji</h3>
+                        <button class="close-modal"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" id="emojiSearch" placeholder="Search emoji...">
+                        <div id="emojiGrid" class="emoji-grid"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-left">
+                    <h3><i class="fas fa-code"></i> Discord Animated Status</h3>
+                    <p>Powerful selfbot for animated Discord custom status with Web UI</p>
+                </div>
+                <div class="footer-center">
+                    <div class="footer-links">
+                        <a href="https://github.com/dnaptdpt/discord-animated-status" target="_blank">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                        <a href="#" onclick="window.location.reload()">
+                            <i class="fas fa-redo"></i> Reload
+                        </a>
+                        <a href="/api/status" target="_blank">
+                            <i class="fas fa-heartbeat"></i> API Status
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-right">
+                    <p class="coded-by">
+                        <i class="fas fa-heart" style="color: #e74c3c;"></i> 
+                        Code by <strong>Alex Do</strong>
+                    </p>
+                    <p class="version">v2.0.0 • MIT License</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>
+                    <i class="fas fa-exclamation-triangle"></i> 
+                    <strong>Warning:</strong> Using selfbots violates Discord's Terms of Service. Use at your own risk.
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
