@@ -69,7 +69,7 @@
 
 3. **Configure environment**
 - cp .env.example .env
--Edit .env with your Discord token
+- Edit .env with your Discord token
 
 4. **Start MongoDB** (if using local)
 - mongod
@@ -272,5 +272,6 @@ See the [LICENSE](LICENSE) file for full details.
 [⬆ Back to top](#-discord-animated-status-selfbot)
 
 </div>
+
 
 
