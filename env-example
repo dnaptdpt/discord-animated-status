@@ -1,0 +1,7 @@
+DISCORD_TOKEN=your_token_here
+MONGODB_URI=mongodb://localhost:27017/animated-status
+PORT=3000
+DEFAULT_INTERVAL=10000
+MIN_INTERVAL=2900
+# Log Mode: none, minimal, detailed
+LOG_MODE=minimal
